@@ -18,6 +18,10 @@
   text-align: center;
 }
 
+body {
+  padding: 0 16px 32px 16px;
+}
+
 h1,
 h2,
 h3,
