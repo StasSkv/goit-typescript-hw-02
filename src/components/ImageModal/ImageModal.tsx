@@ -1,5 +1,5 @@
 import Modal from 'react-modal';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 
 const customStyles = {
   content: {
@@ -20,7 +20,14 @@ const customStyles = {
 
 Modal.setAppElement('#root');
 
-const ImageModal = ({ modalIsOpen, closeModal, modalSrc, modalAlt }) => {
+type ImageModalProps = {
+  modalIsOpen: boolean;
+  closeModal: () => void;
+  modalSrc: string;
+  modalAlt: string;
+};
+
+const ImageModal: React.FC<ImageModalProps> = ({ modalIsOpen, closeModal, modalSrc, modalAlt }) => {
   useEffect(() => {
     if (modalIsOpen) {
       document.body.style.overflow = 'hidden';

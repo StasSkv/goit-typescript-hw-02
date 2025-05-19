@@ -7,23 +7,24 @@ import Loader from '../Loader/Loader';
 import ErrorMessage from '../ErrorMessage/ErrorMessage';
 import LoadMoreBtn from '../LoadMoreBtn/LoadMoreBtn';
 import ImageModal from '../ImageModal/ImageModal';
+import type { ImageType } from '../apiService/getImages';
 
-const App = () => {
-  const [query, setQuery] = useState('');
-  const [page, setPage] = useState(1);
-  const [images, setImages] = useState([]);
-  const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isEmpty, setIsEmpty] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [modalSrc, setModalSrc] = useState('');
-  const [modalAlt, setModalAlt] = useState('');
+const App: React.FC = () => {
+  const [query, setQuery] = useState<string>('');
+  const [page, setPage] = useState<number>(1);
+  const [images, setImages] = useState<ImageType[]>([]);
+  const [error, setError] = useState<Error | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isEmpty, setIsEmpty] = useState<boolean>(false);
+  const [isVisible, setIsVisible] = useState<boolean>(false);
+  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
+  const [modalSrc, setModalSrc] = useState<string>('');
+  const [modalAlt, setModalAlt] = useState<string>('');
 
   useEffect(() => {
     const savedQuery = localStorage.getItem('query');
-    const savedPage = JSON.parse(localStorage.getItem('page')) || 1;
-    const savedImages = JSON.parse(localStorage.getItem('images')) || [];
+    const savedPage = JSON.parse(localStorage.getItem('page') || '1') as number;
+    const savedImages = JSON.parse(localStorage.getItem('images') || '[]') as ImageType[];
 
     if (savedQuery) {
       setQuery(savedQuery);
@@ -35,7 +36,7 @@ const App = () => {
     }
   }, []);
 
-  const handleSearchSubmit = async (newQuery) => {
+  const handleSearchSubmit = async (newQuery: string): Promise<void> => {
     setImages([]);
     setQuery(newQuery);
     setError(null);
@@ -56,13 +57,13 @@ const App = () => {
       localStorage.setItem('page', JSON.stringify(1));
       localStorage.setItem('images', JSON.stringify(newImages));
     } catch (error) {
-      setError(error);
+      setError(error as Error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const onLoadingMore = async () => {
+  const onLoadingMore = async (): Promise<void> => {
     const nextPage = page + 1;
     setIsLoading(true);
     try {
@@ -78,19 +79,19 @@ const App = () => {
       localStorage.setItem('page', JSON.stringify(nextPage));
       localStorage.setItem('images', JSON.stringify(updatedImages));
     } catch (error) {
-      setError(error);
+      setError(error as Error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const isModalOpen = (src, alt) => {
+  const isModalOpen = (src: string, alt: string): void => {
     setModalIsOpen(true);
     setModalAlt(alt);
     setModalSrc(src);
   };
 
-  const isModalClose = () => {
+  const isModalClose = (): void => {
     setModalIsOpen(false);
     setModalAlt('');
     setModalSrc('');
